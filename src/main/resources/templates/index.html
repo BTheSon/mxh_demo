@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <title>Trang chủ</title>
 </head>
 <body>
     <h2>Chào mừng, <span th:text="${user.username}">User</span>!</h2>
-    <p>Bạn đã đăng nhập thành công.</p>
     <a th:href="@{/logout}">Đăng xuất</a>
+    <p>bài viết:</p>
+    <ul>
+        <li th:each="feed : ${my_feed}">
+            <h2 th:text="${feed.authorName}">unknown author</h2>
+            <h3 th:text="${feed.title}">Title</h3>
+            <p th:text="${feed.body}">Body</p>
+            <small th:text="${#temporals.format(feed.created_at, 'dd/MM/yyyy HH:mm')}"></small>
+        </li>
+    </ul>
 </body>
 </html>
