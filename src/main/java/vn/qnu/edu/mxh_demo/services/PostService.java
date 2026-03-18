@@ -14,8 +14,8 @@ public class PostService {
     @Autowired
     private PostRepo postRepo;
 
-    public List<Post> getFeed() {
-        return postRepo.findFeed();
+    public List<Post> getFeed(Integer userId) {
+        return postRepo.findFeed(userId);
     }
 
     public List<Post> getPostsByUserId(Integer userId) {

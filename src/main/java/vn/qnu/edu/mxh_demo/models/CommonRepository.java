@@ -31,11 +31,16 @@ public class CommonRepository<T extends BaseEntity<T>> {
 
     public int save(T entity) {
         Map<String, Object> params = entity.getParams();
-        String columns = String.join(", ", params.keySet());
-        String placeholders = String.join(", ", params.keySet().stream().map(k -> "?").toList());
+        // Loại bỏ các trường null (thường là ID khi INSERT mới)
+        Map<String, Object> nonNullParams = params.entrySet().stream()
+                .filter(e -> e.getValue() != null)
+                .collect(java.util.stream.Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1, java.util.LinkedHashMap::new));
+
+        String columns = String.join(", ", nonNullParams.keySet());
+        String placeholders = String.join(", ", nonNullParams.keySet().stream().map(k -> "?").toList());
 
         String sql = "INSERT INTO " + entity.getTableName() + " (" + columns + ") VALUES (" + placeholders + ")";
-        return jdbcTemplate.update(sql, params.values().toArray());
+        return jdbcTemplate.update(sql, nonNullParams.values().toArray());
     }
 
     public int update(T entity) {
